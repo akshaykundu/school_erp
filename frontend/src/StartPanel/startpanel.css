@@ -1,0 +1,99 @@
+.start-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+}
+
+.start-panel__container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    max-width: 600px;
+    width: 100%;
+}
+
+.start-panel__brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.start-panel__logo {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    object-fit: cover;
+    box-shadow: 0 12px 28px rgba(102, 126, 234, 0.28);
+    animation: start-panel-logo-float 3s ease-in-out infinite;
+}
+
+.start-panel__brand-title {
+    margin: 0;
+    color: #1f2a44;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+}
+
+.start-panel__brand-subtitle {
+    margin: 6px 0 0;
+    color: #667085;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.start-panel__title {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #333;
+    text-align: center;
+}
+
+.start-panel__button {
+    width: 100%;
+    padding: 12px 24px;
+    margin-bottom: 16px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    background-color: #667eea;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.start-panel__button:hover {
+    background-color: #5568d3;
+}
+
+.start-panel__button:active {
+    transform: scale(0.98);
+}
+
+@keyframes start-panel-logo-float {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-8px) rotate(2deg);
+    }
+
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+}

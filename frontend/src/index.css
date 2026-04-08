@@ -1,2 +1,15 @@
 @import "tailwindcss";
 /* @plugin "daisyui"; */
+
+button,
+[role='button'],
+a {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+}
