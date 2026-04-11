@@ -41,6 +41,26 @@ The backend will run on:
 
 `http://localhost:5000`
 
+## Local Environment Variables
+
+Create `backend/.env` and add any test credentials you want the backend to load automatically.
+
+Example:
+
+```env
+RAZORPAY_KEY_ID=rzp_test_your_key_id
+RAZORPAY_KEY_SECRET=your_test_key_secret
+TWILIO_ACCOUNT_SID=
+TWILIO_AUTH_TOKEN=
+TWILIO_SMS_FROM_NUMBER=
+TWILIO_WHATSAPP_FROM_NUMBER=
+```
+
+Razorpay test checkout for student fee payments uses:
+
+- `RAZORPAY_KEY_ID`
+- `RAZORPAY_KEY_SECRET`
+
 ## Frontend
 
 In a separate terminal:

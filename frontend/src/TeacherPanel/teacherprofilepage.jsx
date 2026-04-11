@@ -13,7 +13,7 @@ function TeacherProfilePage({
   error
 }) {
   return (
-    <section className="mt-8">
+    <section className="mt-4">
       <ProfileForm
         title="Teacher Profile"
         accentClasses={{

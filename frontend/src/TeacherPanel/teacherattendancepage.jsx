@@ -74,44 +74,44 @@ function TeacherAttendancePage({ classId, teacherUser, onBack }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-100 p-2 sm:p-4 lg:p-4">
       <div className="mx-auto max-w-7xl">
-        <BrandBanner subtitle="Teacher Attendance Page" textClassName="text-blue-950" subtextClassName="text-blue-700" className="mb-6" />
+        <BrandBanner subtitle="Teacher Attendance Page" textClassName="text-blue-950" subtextClassName="text-blue-700" className="mb-4" />
         <button
           type="button"
           onClick={onBack}
-          className="mb-6 rounded-2xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+          className="mb-4 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 sm:w-auto sm:py-1.5"
         >
           Back To Class Page
         </button>
 
-        {loading ? <p className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">Loading attendance page...</p> : null}
-        {error ? <p className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p> : null}
-        {feedback ? <p className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{feedback}</p> : null}
+        {loading ? <p className="mb-4 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm text-blue-700">Loading attendance page...</p> : null}
+        {error ? <p className="mb-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2 text-sm text-rose-700">{error}</p> : null}
+        {feedback ? <p className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-700">{feedback}</p> : null}
 
         {classroom ? (
           <>
-            <section className="rounded-3xl bg-blue-950 p-8 text-white">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-200">Attendance Page</p>
-              <h1 className="mt-3 text-4xl font-bold">
-                {classroom.className} - {classroom.section}
+            <section className="rounded-xl bg-blue-950 p-4 text-white sm:p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-blue-200">Attendance Page</p>
+              <h1 className="mt-2 text-2xl font-bold sm:text-3xl">
+                {classroom.className}
               </h1>
-              <p className="mt-2 text-blue-100">{classroom.subject}</p>
-              <p className="mt-4 text-sm text-blue-100">{classroom.students.length} students available for today&apos;s attendance</p>
+              <p className="mt-1 text-sm text-blue-100">{classroom.subject}</p>
+              <p className="mt-2 text-xs text-blue-100">{classroom.students.length} students available for today&apos;s attendance</p>
             </section>
 
-            <section className="mt-8 rounded-3xl bg-white p-6 shadow-sm">
-              <h2 className="text-2xl font-semibold text-slate-900">Mark Today&apos;s Attendance</h2>
-              <div className="mt-6 space-y-4">
+            <section className="mt-4 rounded-xl bg-white p-4 shadow-sm sm:p-5">
+              <h2 className="text-lg font-semibold text-slate-900">Mark Today&apos;s Attendance</h2>
+              <div className="mt-3 space-y-2">
                 {classroom.students.length ? (
                   classroom.students.map((student) => (
-                    <div key={student.email} className="rounded-2xl border border-slate-200 p-4">
+                    <div key={student.email} className="rounded-xl border border-slate-200 p-3">
                       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div className="flex items-center gap-3">
                           {student.profileImage ? (
-                            <img src={student.profileImage} alt={student.name} className="h-12 w-12 rounded-full object-cover" />
+                            <img src={student.profileImage} alt={student.name} className="h-10 w-10 rounded-full object-cover" />
                           ) : (
-                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-200 font-bold text-slate-600">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 font-bold text-slate-600">
                               {student.name.slice(0, 1).toUpperCase()}
                             </div>
                           )}
@@ -122,12 +122,12 @@ function TeacherAttendancePage({ classId, teacherUser, onBack }) {
                           </div>
                         </div>
 
-                        <div className="flex gap-2">
+                        <div className="grid gap-2 sm:grid-cols-2">
                           <button
                             type="button"
                             onClick={() => markAttendance(student.email, 'Present')}
                             disabled={busyStudent === student.email}
-                            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:bg-emerald-300"
+                            className="rounded-lg bg-emerald-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:bg-emerald-300"
                           >
                             {busyStudent === student.email ? 'Saving...' : 'Present'}
                           </button>
@@ -135,7 +135,7 @@ function TeacherAttendancePage({ classId, teacherUser, onBack }) {
                             type="button"
                             onClick={() => markAttendance(student.email, 'Absent')}
                             disabled={busyStudent === student.email}
-                            className="rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:bg-rose-300"
+                            className="rounded-lg bg-rose-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:bg-rose-300"
                           >
                             {busyStudent === student.email ? 'Saving...' : 'Absent'}
                           </button>

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 import { API_BASE_URL } from '../config.js';
 
-export default function TeacherLogin({ onBack, onLogin }) {
+export default function TeacherLogin() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -40,7 +44,10 @@ export default function TeacherLogin({ onBack, onLogin }) {
       }
 
       setSuccess('Login successful. Opening teacher portal...');
-      setTimeout(() => onLogin(data.user), 700);
+      setTimeout(() => {
+        login(data.user, data.token, 'teacher');
+        navigate('/teacher');
+      }, 700);
     } catch (requestError) {
       setError('Could not connect to the backend server.');
     } finally {
@@ -130,7 +137,7 @@ export default function TeacherLogin({ onBack, onLogin }) {
 
             <button
               type="button"
-              onClick={onBack}
+              onClick={() => navigate('/')}
               className="mt-4 w-full rounded-2xl border border-slate-200 px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
             >
               Back to Role Selection

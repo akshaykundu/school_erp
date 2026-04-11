@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 import BrandBanner from '../components/BrandBanner.jsx';
 import StudentDetailsPanel from '../components/StudentDetailsPanel.jsx';
 import TeacherClassroomPage from './teacherclassroompage.jsx';
 import TeacherProfilePage from './teacherprofilepage.jsx';
 import { API_BASE_URL } from '../config.js';
 
-function TeacherPortal({ teacherUser, onLogout }) {
+function TeacherPortal() {
+  const navigate = useNavigate();
+  const { user: teacherUser, logout } = useAuth();
   const [profileName, setProfileName] = useState(teacherUser?.name || '');
   const [profile, setProfile] = useState({
     phone: '',
@@ -32,6 +36,7 @@ function TeacherPortal({ teacherUser, onLogout }) {
   const [protectedDetailsMessage, setProtectedDetailsMessage] = useState('');
   const [protectedDetailsError, setProtectedDetailsError] = useState('');
   const [isProtectedDetailsSaving, setIsProtectedDetailsSaving] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   async function loadStudents() {
     if (!teacherUser?.email) {
@@ -119,8 +124,8 @@ function TeacherPortal({ teacherUser, onLogout }) {
 
   function navClass(page) {
     return currentPage === page
-      ? 'block w-full rounded-2xl bg-blue-50 px-4 py-3 text-left font-semibold text-blue-800 transition hover:bg-blue-100'
-      : 'block w-full rounded-2xl px-4 py-3 text-left font-semibold text-slate-700 transition hover:bg-slate-100';
+      ? 'block w-full rounded-2xl bg-blue-50 px-3 py-2 text-left font-semibold text-blue-800 transition hover:bg-blue-100'
+      : 'block w-full rounded-2xl px-3 py-2 text-left font-semibold text-slate-700 transition hover:bg-slate-100';
   }
 
   function updateProfileField(field, value) {
@@ -282,14 +287,50 @@ function TeacherPortal({ teacherUser, onLogout }) {
   }
 
   return (
-    <div className="font-sans text-gray-800">
-      <header className="fixed top-0 z-50 flex w-full items-center justify-between bg-white/80 px-8 py-4 shadow backdrop-blur-xl">
-        <BrandBanner subtitle="Teacher Portal" textClassName="text-blue-950" subtextClassName="text-blue-700" />
-        <div className="flex items-center gap-3">
+    <div className="min-h-screen bg-gray-100 font-sans text-gray-800">
+      <header className="fixed top-0 z-50 flex w-full flex-wrap items-center justify-between gap-3 bg-white/80 px-4 py-4 shadow backdrop-blur-xl sm:px-6 lg:px-8">
+        <div className="min-w-0 flex-1">
+          <BrandBanner subtitle="Teacher Portal" textClassName="text-blue-950" subtextClassName="text-blue-700" />
+        </div>
+        <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto sm:flex-nowrap sm:gap-3">
+          <div className="relative w-full sm:hidden">
+            <button
+              type="button"
+              onClick={() => setMobileNavOpen((currentValue) => !currentValue)}
+              className="flex w-full items-center justify-between rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
+              <span>{currentPage === 'profile' ? 'Profile' : 'Dashboard'}</span>
+              <span className="text-xs text-slate-500">{mobileNavOpen ? 'Close' : 'Menu'}</span>
+            </button>
+            {mobileNavOpen ? (
+              <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCurrentPage('dashboard');
+                    setMobileNavOpen(false);
+                  }}
+                  className={navClass('dashboard')}
+                >
+                  Dashboard
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCurrentPage('profile');
+                    setMobileNavOpen(false);
+                  }}
+                  className={navClass('profile')}
+                >
+                  Profile
+                </button>
+              </div>
+            ) : null}
+          </div>
           <button
             type="button"
             onClick={() => setCurrentPage('profile')}
-            className="flex items-center gap-3 rounded-full border border-slate-200 bg-white px-2 py-1.5 transition hover:bg-slate-50"
+            className="flex min-w-0 flex-1 items-center gap-3 rounded-full border border-slate-200 bg-white px-2 py-1.5 transition hover:bg-slate-50 sm:flex-none"
           >
             {profile.profileImage ? (
               <img
@@ -302,12 +343,12 @@ function TeacherPortal({ teacherUser, onLogout }) {
                 {(profileName || teacherUser?.name || 'T').slice(0, 1).toUpperCase()}
               </div>
             )}
-            <span className="pr-2 text-sm font-medium text-slate-700">Profile</span>
+            <span className="truncate pr-2 text-sm font-medium text-slate-700">Profile</span>
           </button>
-          <button type="button" onClick={onLogout} className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">Logout</button>
+          <button type="button" onClick={() => { logout(); navigate('/'); }} className="flex-none rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100">Logout</button>
         </div>
       </header>
-      <div className="flex pt-20">
+      <div className="flex flex-col pt-36 sm:pt-24 md:flex-row">
         <aside className="fixed left-0 top-0 hidden h-screen w-72 flex-col border-r bg-slate-50 py-6 md:flex">
           <div className="mb-10 mt-16 px-8">
             <BrandBanner subtitle="Teacher Portal" textClassName="text-blue-950" subtextClassName="text-blue-700" />
@@ -322,7 +363,7 @@ function TeacherPortal({ teacherUser, onLogout }) {
             </button>
           </nav>
         </aside>
-        <main className="min-h-screen flex-1 bg-gray-100 p-8 md:ml-72">
+        <main className="min-h-screen flex-1 p-4 sm:p-4 md:ml-72 lg:p-5">
           {currentPage === 'profile' ? (
             <TeacherProfilePage
               profileName={profileName}
@@ -339,8 +380,8 @@ function TeacherPortal({ teacherUser, onLogout }) {
 
           {currentPage === 'dashboard' ? (
             <>
-              <div className="mb-10">
-                <h2 className="mb-2 text-4xl font-extrabold text-blue-900">Welcome, Teacher</h2>
+              <div className="mb-8 sm:mb-10">
+                <h2 className="mb-2 text-3xl font-extrabold text-blue-900 sm:text-4xl">Welcome, Teacher</h2>
                 <p className="text-gray-500">{teacherUser?.email ? `Signed in as ${teacherUser.email}` : 'Only admin-added teachers can access this portal.'}</p>
               </div>
 
@@ -367,45 +408,45 @@ function TeacherPortal({ teacherUser, onLogout }) {
                 </div>
               ) : null}
 
-              <div className="grid gap-6 xl:grid-cols-2">
-                <section className="rounded-3xl bg-white p-6 shadow xl:col-span-2">
+              <div className="grid gap-4 xl:grid-cols-2">
+                <section className="rounded-xl bg-white p-4 shadow xl:col-span-2">
                   <h3 className="text-2xl font-semibold text-slate-900">Assigned Classes</h3>
                   <p className="mt-2 text-sm text-slate-500">
                     Admin creates classes and assigns teachers. Open any class assigned to you for attendance, exams, assignments, and announcements.
                   </p>
-                  {classError ? <p className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{classError}</p> : null}
-                  {loadingClassrooms ? <p className="mt-4 rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">Loading classes...</p> : null}
+                  {classError ? <p className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{classError}</p> : null}
+                  {loadingClassrooms ? <p className="mt-4 rounded-2xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700">Loading classes...</p> : null}
                   {!loadingClassrooms && !classrooms.length ? (
-                    <p className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                    <p className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600">
                       No classes assigned yet. Contact admin to assign you to a class.
                     </p>
                   ) : null}
                   {!loadingClassrooms && classrooms.length ? (
-                    <div className="mt-6 grid gap-4 lg:grid-cols-2">
+                    <div className="mt-4 grid gap-4 lg:grid-cols-2">
                       {classrooms.map((classroom) => (
                         <div key={classroom.id} className="rounded-2xl border border-slate-200 p-5">
                           <div className="flex flex-wrap items-start justify-between gap-3">
                             <div>
                               <button type="button" onClick={() => setOpenedClassId(classroom.id)} className="text-left text-lg font-semibold text-blue-900 transition hover:text-blue-700 hover:underline">
-                                {classroom.className} - {classroom.section}
+                                {classroom.className}
                               </button>
                               <p className="mt-1 text-sm text-slate-500">{classroom.subject}</p>
                             </div>
-                            <div className="flex items-center gap-3">
+                            <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto sm:justify-end">
                               <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800">
                                 {classroom.studentCount} Students
                               </span>
                               <button
                                 type="button"
                                 onClick={() => setOpenedClassId(classroom.id)}
-                                className="rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-800"
+                                className="w-full rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-800 sm:w-auto"
                               >
                                 Enter Class
                               </button>
                             </div>
                           </div>
 
-                          <div className="mt-4 rounded-xl bg-slate-50 px-4 py-3">
+                          <div className="mt-4 rounded-xl bg-slate-50 px-3 py-2">
                             <p className="text-sm text-slate-500">Students in class</p>
                             <p className="mt-1 text-lg font-semibold text-slate-900">{classroom.studentCount}</p>
                           </div>
@@ -419,7 +460,7 @@ function TeacherPortal({ teacherUser, onLogout }) {
           ) : null}
         </main>
       </div>
-      <footer className="border-t bg-slate-50 py-6 text-center">(c) 2024 ERP</footer>
+      <footer className="border-t bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">(c) 2024 ERP</footer>
     </div>
   );
 }

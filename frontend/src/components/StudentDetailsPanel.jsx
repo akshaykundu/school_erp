@@ -37,6 +37,18 @@ function formatDisplayDateTime(dateTimeValue) {
   });
 }
 
+function formatAlertType(alertType) {
+  if (alertType === 'attendance_absent') {
+    return 'Absent Attendance';
+  }
+
+  if (alertType === 'fee_overdue') {
+    return 'Overdue Fee';
+  }
+
+  return alertType || 'Unknown Alert';
+}
+
 function StudentDetailsPanel({
   title,
   accentClasses,
@@ -48,7 +60,11 @@ function StudentDetailsPanel({
   onProtectedDetailsSave,
   isProtectedDetailsSaving,
   protectedDetailsMessage,
-  protectedDetailsError
+  protectedDetailsError,
+  onMarkFeePaid,
+  feeActionBusyKey,
+  feeActionMessage,
+  feeActionError
 }) {
   if (loading) {
     return (
@@ -74,7 +90,7 @@ function StudentDetailsPanel({
     return null;
   }
 
-  const { student, profile, summary, attendanceRecords, feeDetails, examDetails, assignmentDetails, protectedDetails } = details;
+  const { student, profile, summary, attendanceRecords, feeDetails, examDetails, assignmentDetails, protectedDetails, parentAlerts = [] } = details;
 
   return (
     <section className="rounded-3xl bg-white p-6 shadow-sm">
@@ -195,12 +211,27 @@ function StudentDetailsPanel({
 
         <div className="rounded-2xl border border-slate-200 p-4">
           <h4 className="font-semibold text-slate-900">Fee Details</h4>
-          <div className="mt-3 space-y-2 text-sm">
+          <div className="card-scrollbar mt-3 max-h-96 space-y-2 overflow-y-auto pr-2 text-sm">
+            {feeActionError ? <p className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-rose-700">{feeActionError}</p> : null}
+            {feeActionMessage ? <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-700">{feeActionMessage}</p> : null}
             {feeDetails.length ? feeDetails.map((fee) => (
               <div key={`${fee.title}-${fee.dueDate}`} className="rounded-xl bg-slate-50 px-3 py-2">
                 <p className="font-medium text-slate-900">{fee.title}</p>
                 <p className="text-slate-600">{fee.amount} | {fee.status}</p>
                 <p className="text-slate-500">Due: {fee.dueDate}</p>
+                <p className="text-slate-500">Allowed Online Methods: {fee.allowedPaymentMethods?.length ? fee.allowedPaymentMethods.join(', ') : 'UPI, Card, Bank Transfer'}</p>
+                <p className="text-slate-500">Payment Method: {fee.paymentMethod || 'Not added'}</p>
+                <p className="text-slate-500">Paid At: {fee.paidAt ? formatDisplayDateTime(fee.paidAt) : 'Not paid yet'}</p>
+                {onMarkFeePaid && fee.status === 'Pending' ? (
+                  <button
+                    type="button"
+                    onClick={() => onMarkFeePaid(fee)}
+                    disabled={feeActionBusyKey === `${fee.title}-${fee.dueDate}`}
+                    className="mt-3 rounded-xl bg-emerald-600 px-4 py-2 font-semibold text-white transition hover:bg-emerald-700 disabled:bg-emerald-300"
+                  >
+                    {feeActionBusyKey === `${fee.title}-${fee.dueDate}` ? 'Marking Cash Payment...' : 'Mark Paid In Cash'}
+                  </button>
+                ) : null}
               </div>
             )) : <p className="text-slate-500">No fee records.</p>}
           </div>
@@ -208,15 +239,32 @@ function StudentDetailsPanel({
 
         <div className="rounded-2xl border border-slate-200 p-4">
           <h4 className="font-semibold text-slate-900">Exam Details</h4>
-          <div className="mt-3 space-y-2 text-sm">
+          <div className="card-scrollbar mt-3 max-h-96 space-y-2 overflow-y-auto pr-2 text-sm">
             {examDetails.length ? examDetails.map((exam) => (
               <div key={`${exam.subject}-${exam.date}-${exam.time}`} className="rounded-xl bg-slate-50 px-3 py-2">
                 <p className="font-medium text-slate-900">{exam.subject}</p>
                 <p className="text-slate-600">{exam.date} | {formatDisplayTime(exam.time)}</p>
                 <p className="text-slate-500">Room: {exam.room}</p>
+                <p className="text-slate-500">Exam Attendance: {exam.attendanceStatus || 'Pending'}</p>
+                <p className="text-slate-500">Marks: {exam.marksObtained || 'Not added'}</p>
               </div>
             )) : <p className="text-slate-500">No exam records.</p>}
           </div>
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-slate-200 p-4">
+        <h4 className="font-semibold text-slate-900">Parent Alert History</h4>
+        <div className="card-scrollbar mt-3 max-h-72 space-y-2 overflow-y-auto pr-2 text-sm">
+          {parentAlerts.length ? parentAlerts.map((alert) => (
+            <div key={`${alert.key}-${alert.channel}-${alert.sentAt}`} className="rounded-xl bg-slate-50 px-3 py-2">
+              <p className="font-medium text-slate-900">{formatAlertType(alert.type)}</p>
+              <p className="text-slate-600">Channel: {alert.channel === 'whatsapp' ? 'WhatsApp' : 'SMS'}</p>
+              <p className="text-slate-600">Recipient: {alert.recipient}</p>
+              <p className="text-slate-600">Status: {alert.deliveryStatus}</p>
+              <p className="text-slate-500">Sent At: {formatDisplayDateTime(alert.sentAt)}</p>
+            </div>
+          )) : <p className="text-slate-500">No parent alerts have been sent yet.</p>}
         </div>
       </div>
 

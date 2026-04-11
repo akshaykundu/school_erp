@@ -129,42 +129,42 @@ function TeacherExamPage({ classId, teacherUser, exam, onBack }) {
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="mx-auto max-w-7xl">
-        <BrandBanner subtitle="Teacher Exam Page" textClassName="text-blue-950" subtextClassName="text-blue-700" className="mb-6" />
+        <BrandBanner subtitle="Teacher Exam Page" textClassName="text-blue-950" subtextClassName="text-blue-700" className="mb-4" />
         <button
           type="button"
           onClick={onBack}
-          className="mb-6 rounded-2xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+          className="mb-4 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
         >
           Back To Class Page
         </button>
 
-        {loading ? <p className="rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">Loading exam page...</p> : null}
-        {error ? <p className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p> : null}
-        {feedback ? <p className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{feedback}</p> : null}
+        {loading ? <p className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700">Loading exam page...</p> : null}
+        {error ? <p className="mb-4 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p> : null}
+        {feedback ? <p className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">{feedback}</p> : null}
 
         {examData ? (
           <>
-            <section className="rounded-3xl bg-blue-950 p-8 text-white">
+            <section className="rounded-xl bg-blue-950 p-8 text-white">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-200">Exam Page</p>
-              <h1 className="mt-3 text-4xl font-bold">{examData.exam.subject}</h1>
+              <h1 className="mt-2 text-4xl font-bold">{examData.exam.subject}</h1>
               <p className="mt-2 text-blue-100">
-                {examData.class.className} - {examData.class.section} | {examData.exam.date} | {formatDisplayTime(examData.exam.time)}
+                {examData.class.className} | {examData.exam.date} | {formatDisplayTime(examData.exam.time)}
               </p>
               <p className="mt-2 text-blue-100">Room: {examData.exam.room} | Max Marks: {examData.exam.maxMarks}</p>
             </section>
 
-            <section className="mt-8 rounded-3xl bg-white p-6 shadow-sm">
+            <section className="mt-4 rounded-xl bg-white p-6 shadow-sm">
               <h2 className="text-2xl font-semibold text-slate-900">Student Exam Results</h2>
-              <div className="mt-6 space-y-4">
+              <div className="mt-3 space-y-4">
                 {examData.students.length ? (
                   examData.students.map((student) => (
-                    <div key={student.email} className="rounded-2xl border border-slate-200 p-4">
+                    <div key={student.email} className="rounded-lg border border-slate-200 p-4">
                       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                         <div className="flex items-center gap-3">
                           {student.profileImage ? (
-                            <img src={student.profileImage} alt={student.name} className="h-12 w-12 rounded-full object-cover" />
+                            <img src={student.profileImage} alt={student.name} className="h-10 w-10 rounded-full object-cover" />
                           ) : (
-                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-200 font-bold text-slate-600">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 font-bold text-slate-600">
                               {student.name.slice(0, 1).toUpperCase()}
                             </div>
                           )}
@@ -184,7 +184,7 @@ function TeacherExamPage({ classId, teacherUser, exam, onBack }) {
                                 marksObtained: nextStatus === 'Absent' ? 'Absent' : ''
                               });
                             }}
-                            className="rounded-2xl border border-slate-200 px-4 py-3 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                            className="rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
                           >
                             <option value="Pending">Pending</option>
                             <option value="Present">Present</option>
@@ -202,14 +202,14 @@ function TeacherExamPage({ classId, teacherUser, exam, onBack }) {
                             })}
                             disabled={student.attendanceStatus === 'Absent'}
                             placeholder={`Marks / ${student.maxMarks}`}
-                            className="rounded-2xl border border-slate-200 px-4 py-3 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:bg-slate-100"
+                            className="rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 disabled:bg-slate-100"
                           />
 
                           <button
                             type="button"
                             onClick={() => saveStudentResult(student)}
                             disabled={busyStudent === student.email}
-                            className="rounded-2xl bg-blue-700 px-4 py-3 font-semibold text-white transition hover:bg-blue-800 disabled:bg-blue-300"
+                            className="rounded-lg bg-blue-700 px-3 py-2 font-semibold text-white transition hover:bg-blue-800 disabled:bg-blue-300"
                           >
                             {busyStudent === student.email ? 'Saving...' : 'Save Result'}
                           </button>
